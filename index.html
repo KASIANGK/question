@@ -1,313 +1,241 @@
 
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Very important question 📩</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100dvh;
-      display: grid;
-      place-items: center;
-      padding: 20px;
-      font-family: -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif;
-
-      background: radial-gradient(
-        circle at center,
-        #594079 0%,
-        #302044 48%,
-        #171020 100%
-      );
-
-      color: white;
-    }
-
-    .popup {
-      width: min(100%, 390px);
-      padding: 34px 24px;
-      border: 1px solid #ffffff30;
-      border-radius: 24px;
-      background: #242033;
-      text-align: center;
-      box-shadow: 0 25px 80px #0008;
-      animation: appear 0.35s ease;
-    }
-
-    .emoji {
-      font-size: 44px;
-      margin-bottom: 14px;
-    }
-
-    .emoji:empty {
-      display: none;
-    }
-
-    h1 {
-      font-size: 25px;
-      margin: 0 0 12px;
-    }
-
-    .buttons {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 26px;
-    }
-
-    button {
-      border: 0;
-      border-radius: 13px;
-      padding: 13px 28px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      transition:
-        transform 0.2s,
-        background 0.2s;
-    }
-
-    button:active {
-      transform: scale(0.94);
-    }
-
-    /* COULEURS PAR DÉFAUT : QUESTION 2 */
-
-    .yes {
-      background: #b99aff;
-      color: #171022;
-    }
-
-    .no {
-      background: #484255;
-      color: white;
-    }
-
-    /* COULEURS SPÉCIALES : QUESTION 1 */
-
-    .yes.first-question {
-      background: #484255;
-      color: white;
-    }
-
-    .no.first-question {
-      background: #d5c5ef;
-      color: #21162e;
-    }
-
-    .error {
-      min-height: 24px;
-      margin-top: 18px;
-      font-size: 14px;
-      color: #ffb5cb;
-    }
-
-    .error:empty {
-      display: none;
-    }
-
-    .gif {
-      width: 190px;
-      max-width: 100%;
-      border-radius: 14px;
-      margin: 16px auto;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    @keyframes appear {
-      from {
-        opacity: 0;
-        transform: translateY(15px) scale(0.97);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-  </style>
-</head>
-
-<body>
-
-  <main class="popup" id="popup">
-
-    <div class="emoji" id="emoji"></div>
-
-    <h1 id="question">
-      Heyyy, jesteś busy?
-    </h1>
-
-    <div class="buttons" id="buttons">
-
-      <button
-        class="yes first-question"
-        id="yesBtn"
-      >
-        TAK
-      </button>
-
-      <button
-        class="no first-question"
-        id="noBtn"
-      >
-        NIE
-      </button>
-
-    </div>
-
-    <div class="error" id="error"></div>
-
-    <img
-      class="gif hidden"
-      id="gif"
-      alt="Funny goodbye GIF"
-    />
-
-  </main>
-
-  <script>
-
-    // TON NUMÉRO
-    const phone = "+32472845612";
-
-    let stage = "busy";
-    let refusals = 0;
-
-    // ÉLÉMENTS HTML
-    const question = document.getElementById("question");
-    const emoji = document.getElementById("emoji");
-    const buttons = document.getElementById("buttons");
-    const error = document.getElementById("error");
-    const gif = document.getElementById("gif");
-    const yesBtn = document.getElementById("yesBtn");
-    const noBtn = document.getElementById("noBtn");
-
-
-    // SAUVEGARDE LOCALE
-    function save(answer) {
-      localStorage.setItem("friend_answer", answer);
-    }
-
-
-    // QUESTION 2 : PROMENADE
-    function showWalk() {
-
-      stage = "walk";
-      refusals = 0;
-
-      emoji.textContent = "";
-      question.textContent = "Chętny na spacer? 👀";
-
-      error.textContent = "";
-
-      yesBtn.textContent = "TAK";
-      noBtn.textContent = "NIE";
-
-      // Retour aux couleurs par défaut
-      yesBtn.classList.remove("first-question");
-      noBtn.classList.remove("first-question");
-    }
-
-
-    // FIN : BONNE SOIRÉE + GIF
-    function goodbye(type) {
-
-      stage = "bye";
-
-      emoji.textContent = "";
-      question.textContent = "All right, bonne soirée !";
-
-      // Cacher les boutons
-      buttons.classList.add("hidden");
-
-      // Effacer les messages d'erreur
-      error.textContent = "";
-
-      // GIF différent selon la réponse
-      gif.src = type === "busy"
-        ? "./busy.gif"
-        : "./goodbye.gif";
-
-      gif.classList.remove("hidden");
-    }
-
-
-    // OUVERTURE DIRECTE DE MESSAGES
-    function openMessage() {
-
-      save("walk_yes");
-
-      const message = "Spacer? Wyśmienity pomysł!";
-
-      const smsURL =
-        `sms:${phone}&body=${encodeURIComponent(message)}`;
-
-      window.location.href = smsURL;
-    }
-
-
-    // CLIC SUR TAK
-    yesBtn.addEventListener("click", () => {
-
-      if (stage === "busy") {
-
-        save("busy_yes");
-        goodbye("busy");
-
-      } else if (stage === "walk") {
-
-        openMessage();
-
-      }
-
-    });
-
-
-    // CLIC SUR NIE
-    noBtn.addEventListener("click", () => {
-
-      if (stage === "busy") {
-
-        save("busy_no");
-        showWalk();
-        return;
-
-      }
-
-      if (stage === "walk") {
-
-        refusals++;
-
-        if (refusals === 1) {
-
-          error.textContent = "Hmm... 🤨";
-
-        } else if (refusals === 2) {
-
-          error.textContent =
-            "✋🏻🛑⛔️ Cette option n'est pas valide ✋🏻🛑⛔️";
-
-        } else {
-
-          save("walk_no");
-          goodbye("walk");
-
+  <html lang="fr">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Very important question 📩</title>
+
+      <style>
+        * {
+          box-sizing: border-box;
         }
-      }
-    });
+        body {
+          margin: 0;
+          min-height: 100dvh;
+          display: grid;
+          place-items: center;
+          padding: 20px;
+          font-family: -apple-system, BlinkMacSystemFont,
+            "Segoe UI", sans-serif;
+          background: radial-gradient(
+            circle at center,
+            #594079 0%,
+            #302044 48%,
+            #171020 100%
+          );
+          color: white;
+        }
+        .popup {
+          width: min(100%, 390px);
+          padding: 34px 24px;
+          border: 1px solid #ffffff30;
+          border-radius: 24px;
+          background: #242033;
+          text-align: center;
+          box-shadow: 0 25px 80px #0008;
+          animation: appear 0.35s ease;
+        }
+        .emoji {
+          font-size: 44px;
+          margin-bottom: 14px;
+        }
+        .emoji:empty {
+          display: none;
+        }
+        h1 {
+          font-size: 25px;
+          margin: 0 0 12px;
+        }
+        .buttons {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+          margin-top: 26px;
+        }
+        button {
+          border: 0;
+          border-radius: 13px;
+          padding: 13px 28px;
+          font-size: 16px;
+          font-weight: 700;
+          cursor: pointer;
+          transition:
+            transform 0.2s,
+            background 0.2s;
+        }
+        button:active {
+          transform: scale(0.94);
+        }
+        .yes {
+          background: #b99aff;
+          color: #171022;
+        }
+        .no {
+          background: #484255;
+          color: white;
+        }
+        .yes.first-question {
+          background: #484255;
+          color: white;
+        }
+        .no.first-question {
+          background: #b99aff;
+          color: #171022;
+        }
+        .error {
+          min-height: 24px;
+          margin-top: 18px;
+          font-size: 14px;
+          color: #ffb5cb;
+        }
+        .error:empty {
+          display: none;
+        }
+        .gif {
+          width: 190px;
+          max-width: 100%;
+          border-radius: 14px;
+          margin: 16px auto;
+        }
+        .hidden {
+          display: none !important;
+        }
+        @keyframes appear {
+          from {
+            opacity: 0;
+            transform: translateY(15px) scale(0.97);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        #smsLink {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 13px;
+          padding: 13px 28px;
+          font-size: 16px;
+          font-weight: 700;
+          text-decoration: none;
+          cursor: pointer;
+        }
 
-  </script>
+        #smsLink:active {
+          transform: scale(0.94);
+        }
+      </style>
+    </head>
 
-</body>
-</html>
+    <body>
+      <main class="popup" id="popup">
+        <div class="emoji" id="emoji"></div>
+        <h1 id="question">
+          Heyyy, jesteś busy?
+        </h1>
+        <div class="buttons" id="buttons">
+          <button
+            class="yes first-question"
+            id="yesBtn"
+          >
+            TAK
+          </button>
+          <a id="smsLink" class="yes hidden" href="#">
+            TAK
+          </a>
+          <button
+            class="no first-question"
+            id="noBtn"
+          >
+            NIE
+          </button>
+        </div>
+        <div class="error" id="error"></div>
+        <img
+          class="gif hidden"
+          id="gif"
+          alt="Funny goodbye GIF"
+        />
+      </main>
+
+      <script>
+        const phone = "+32472845612";
+        let stage = "busy";
+        let refusals = 0;
+        const question = document.getElementById("question");
+        const emoji = document.getElementById("emoji");
+        const buttons = document.getElementById("buttons");
+        const error = document.getElementById("error");
+        const gif = document.getElementById("gif");
+        const yesBtn = document.getElementById("yesBtn");
+        const noBtn = document.getElementById("noBtn");
+        const smsLink = document.getElementById("smsLink");
+        const message = "Spacer? Wyśmienity pomysł!";
+
+        smsLink.href =
+          `sms:${phone}&body=${encodeURIComponent(message)}`;
+
+        smsLink.addEventListener("click", () => {
+          save("walk_yes");
+        });
+
+        function save(answer) {
+          localStorage.setItem("friend_answer", answer);
+        }
+
+        function showWalk() {
+          stage = "walk";
+          refusals = 0;
+          emoji.textContent = "";
+          question.textContent = "Chętny na spacer? 👀";
+          error.textContent = "";
+          yesBtn.textContent = "TAK";
+          noBtn.textContent = "NIE";
+          yesBtn.classList.remove("first-question");
+          noBtn.classList.remove("first-question");
+          yesBtn.classList.add("hidden");
+        smsLink.classList.remove("hidden");
+        }
+
+        function goodbye(type) {
+          stage = "bye";
+          emoji.textContent = "";
+          question.textContent = "All right, bonne soirée !";
+          buttons.classList.add("hidden");
+          smsLink.classList.add("hidden");
+          error.textContent = "";
+          gif.src = type === "busy"
+            ? "./busy.gif"
+            : "./goodbye.gif";
+          gif.classList.remove("hidden");
+        }
+
+        yesBtn.addEventListener("click", () => {
+          if (stage === "busy") {
+            save("busy_yes");
+            goodbye("busy");
+          }
+        });
+
+        noBtn.addEventListener("click", () => {
+          if (stage === "busy") {
+            save("busy_no");
+            showWalk();
+            return;
+          }
+          if (stage === "walk") {
+            refusals++;
+            if (refusals === 1) {
+              error.textContent = "Hmm... 🤨";
+            } else {
+              save("walk_no");
+              goodbye("walk");
+            }
+          }
+        });
+      </script>
+
+    </body>
+  </html>
