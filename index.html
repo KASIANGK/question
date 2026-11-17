@@ -627,30 +627,13 @@
               answer === "yes"
                 ? "Podejrzanie dobrze poinformowany 🤔"
                 : "Nie martw się, ja też żyłam w kłamstwie 😭😭",
-              showStars,
-              answer === "yes"
-            );
-
-            return;
-          }
-
-          // =====================================
-          // QUESTION 4 : ÉTOILES
-          // =====================================
-
-          if (stage === "stars") {
-            save(`stars_${answer}`);
-
-            showFeedback(
-              answer === "yes"
-                ? "No ba, Słońce nie żarówka 😝"
-                : "A Słońce to co, żarówka? 💀",
               showWalk,
               answer === "yes"
             );
 
             return;
           }
+
 
           // =====================================
           // QUESTION 5 : PROMENADE
