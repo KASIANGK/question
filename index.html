@@ -1,549 +1,740 @@
 
 <!DOCTYPE html>
   <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#302044" />
-    <title>Very important question 📩</title>
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta name="theme-color" content="#302044" />
 
-    <style>
-      * {
-        box-sizing: border-box;
-      }
+      <title>Question for a champion</title>
 
-      body {
-        margin: 0;
-        min-height: 100dvh;
-        display: grid;
-        place-items: center;
-        padding: 20px;
-        font-family: -apple-system, BlinkMacSystemFont,
-          "Segoe UI", sans-serif;
-        background: radial-gradient(
-          circle at center,
-          #594079 0%,
-          #302044 48%,
-          #171020 100%
-        );
-        color: white;
-      }
-
-      .popup {
-        position: relative;
-        width: min(100%, 390px);
-        padding: 34px 24px;
-        border: 1px solid #ffffff30;
-        border-radius: 24px;
-        background: #242033;
-        text-align: center;
-        box-shadow: 0 25px 80px #0008;
-        animation: appear 0.35s ease;
-      }
-
-      .emoji {
-        font-size: 44px;
-        margin-bottom: 14px;
-      }
-
-      .emoji:empty {
-        display: none;
-      }
-
-      h1 {
-        font-size: 25px;
-        line-height: 1.35;
-        margin: 0 0 12px;
-      }
-
-      .buttons {
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-        margin-top: 26px;
-      }
-
-      button,
-      #smsLink {
-        border: 0;
-        border-radius: 13px;
-        padding: 13px 28px;
-        font-family: inherit;
-        font-size: 16px;
-        font-weight: 700;
-        cursor: pointer;
-        text-decoration: none;
-        transition:
-          transform 0.2s,
-          background 0.2s;
-      }
-
-      button:active,
-      #smsLink:active {
-        transform: scale(0.94);
-      }
-
-      .yes {
-        background: #b99aff;
-        color: #171022;
-      }
-
-      .no {
-        background: #484255;
-        color: white;
-      }
-
-      /* Première question */
-      .yes.first-question {
-        background: #484255;
-        color: white;
-      }
-
-      .no.first-question {
-        background: #b99aff;
-        color: #171022;
-      }
-
-      /* Questions 2 et 3 : deux boutons gris */
-      .yes.neutral,
-      .no.neutral {
-        background: #484255;
-        color: white;
-      }
-
-      button:disabled {
-        cursor: default;
-        opacity: 1;
-      }
-
-      .error {
-        margin-top: 18px;
-        font-size: 20px;
-        line-height: 1.4;
-        color: #ffb5cb;
-      }
-
-      .error:empty {
-        display: none;
-      }
-
-      .feedback {
-        font-weight: 600;
-      }
-
-      /* Décompte discret en bas à droite */
-      .countdown {
-        display: none;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 6px;
-        margin-top: 14px;
-        color: #b99aff;
-        font-size: 14px;
-        font-weight: 600;
-        font-variant-numeric: tabular-nums;
-      }
-
-      .countdown.visible {
-        display: flex;
-      }
-
-      .gif {
-        display: block;
-        width: 190px;
-        max-width: 100%;
-        border-radius: 14px;
-        margin: 16px auto;
-      }
-
-      .hidden {
-        display: none !important;
-      }
-
-      #smsLink {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      @keyframes appear {
-        from {
-          opacity: 0;
-          transform: translateY(15px) scale(0.97);
+      <style>
+        * {
+          box-sizing: border-box;
         }
-        to {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
-      }
 
-      @media (prefers-reduced-motion: reduce) {
+        body {
+          margin: 0;
+          min-height: 100dvh;
+          display: grid;
+          place-items: center;
+          padding: 20px;
+
+          font-family:
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            sans-serif;
+
+          background: radial-gradient(
+            circle at center,
+            #594079 0%,
+            #302044 48%,
+            #171020 100%
+          );
+
+          color: white;
+        }
+
         .popup {
-          animation: none;
+          position: relative;
+          width: min(100%, 390px);
+          padding: 34px 24px;
+
+          border: 1px solid #ffffff30;
+          border-radius: 24px;
+          background: #242033;
+
+          text-align: center;
+          box-shadow: 0 25px 80px #0008;
+
+          animation: appear 0.35s ease;
+        }
+
+        .emoji {
+          font-size: 44px;
+          margin-bottom: 14px;
+        }
+
+        .emoji:empty {
+          display: none;
+        }
+
+        h1 {
+          font-size: 25px;
+          line-height: 1.35;
+          margin: 0 0 12px;
+        }
+
+        .buttons {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+          margin-top: 26px;
         }
 
         button,
         #smsLink {
-          transition: none;
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-
-    <main class="popup" id="popup">
-
-      <div class="emoji" id="emoji"></div>
-
-      <h1 id="question">
-        Heyyy, jesteś busy?
-      </h1>
-
-      <div class="buttons" id="buttons">
-
-        <button
-          type="button"
-          class="yes first-question"
-          id="yesBtn"
-        >
-          TAK
-        </button>
-
-        <a
-          id="smsLink"
-          class="yes hidden"
-          href="#"
-        >
-          TAK
-        </a>
-
-        <button
-          type="button"
-          class="no first-question"
-          id="noBtn"
-        >
-          NIE
-        </button>
-
-      </div>
-
-      <div
-        class="error"
-        id="error"
-        aria-live="polite"
-      ></div>
-
-      <div
-        class="countdown"
-        id="countdown"
-        aria-label="Prochaine question"
-      >
-        <span aria-hidden="true"></span>
-        <span id="countdownNumber">3</span>
-      </div>
-
-      <img
-        class="gif hidden"
-        id="gif"
-        alt="Funny goodbye GIF"
-      />
-
-    </main>
-
-    <script>
-      // =========================================
-      // CONFIGURATION
-      // =========================================
-
-      const phone = "+32472845612";
-      const message = "Spacer? Wyśmienity pomysł!";
-      const feedbackDuration = 3000;
-
-      // =========================================
-      // ÉLÉMENTS HTML
-      // =========================================
-
-      const question = document.getElementById("question");
-      const emoji = document.getElementById("emoji");
-      const buttons = document.getElementById("buttons");
-      const error = document.getElementById("error");
-      const gif = document.getElementById("gif");
-
-      const yesBtn = document.getElementById("yesBtn");
-      const noBtn = document.getElementById("noBtn");
-      const smsLink = document.getElementById("smsLink");
-
-      const countdown = document.getElementById("countdown");
-      const countdownNumber =
-        document.getElementById("countdownNumber");
-
-      // Lien SMS natif
-      smsLink.href =
-        `sms:${phone}&body=${encodeURIComponent(message)}`;
-
-      // =========================================
-      // ÉTAT
-      // =========================================
-
-      let stage = "busy";
-      let refusals = 0;
-      let transitioning = false;
-      let countdownInterval = null;
-
-      // =========================================
-      // SAUVEGARDE LOCALE
-      // =========================================
-
-      function save(answer) {
-        try {
-          localStorage.setItem("friend_answer", answer);
-        } catch (e) {
-        }
-      }
-
-      // =========================================
-      // RÉINITIALISATION D'UNE QUESTION
-      // =========================================
-
-      function setQuestion(text, nextStage) {
-        stage = nextStage;
-
-        question.textContent = text;
-        emoji.textContent = "";
-
-        error.textContent = "";
-        error.classList.remove("feedback");
-
-        clearInterval(countdownInterval);
-        countdownInterval = null;
-        countdown.classList.remove("visible");
-
-        yesBtn.textContent = "TAK";
-        noBtn.textContent = "NIE";
-
-        yesBtn.classList.remove(
-          "first-question",
-          "neutral",
-          "hidden"
-        );
-
-        noBtn.classList.remove(
-          "first-question",
-          "neutral"
-        );
-
-        smsLink.classList.add("hidden");
-
-        yesBtn.disabled = false;
-        noBtn.disabled = false;
-
-        transitioning = false;
-      }
-
-      // =========================================
-      // QUESTION 2 : POMMES DE TERRE
-      // =========================================
-
-      function showPotatoes() {
-        setQuestion(
-          "Czy można ufać komuś, kto nie lubi ziemniaków?",
-          "potatoes"
-        );
-
-        yesBtn.classList.add("neutral");
-        noBtn.classList.add("neutral");
-      }
-
-      // =========================================
-      // QUESTION 3 : PINGOUINS
-      // =========================================
-
-      function showPenguins() {
-        setQuestion(
-          "Czy pingwiny mają kolana?",
-          "penguins"
-        );
-
-        yesBtn.classList.add("neutral");
-        noBtn.classList.add("neutral");
-      }
-
-      // =========================================
-      // QUESTION 4 : PROMENADE
-      // =========================================
-
-      function showWalk() {
-        setQuestion(
-          "Chętny na spacer? 👀",
-          "walk"
-        );
-
-        refusals = 0;
-
-        yesBtn.classList.add("hidden");
-        smsLink.classList.remove("hidden");
-      }
-
-      // =========================================
-      // RÉACTION + DÉCOMPTE 3, 2, 1
-      // =========================================
-
-      function showFeedback(text, nextStep) {
-        if (transitioning) return;
-
-        transitioning = true;
-
-        error.textContent = text;
-        error.classList.add("feedback");
-
-        // Empêcher plusieurs réponses
-        yesBtn.disabled = true;
-        noBtn.disabled = true;
-
-        let seconds = Math.ceil(
-          feedbackDuration / 1000
-        );
-
-        countdownNumber.textContent = seconds;
-        countdown.classList.add("visible");
-
-        clearInterval(countdownInterval);
-
-        countdownInterval = setInterval(() => {
-          seconds--;
-
-          if (seconds > 0) {
-            countdownNumber.textContent = seconds;
-          } else {
-            clearInterval(countdownInterval);
-            countdownInterval = null;
-
-            countdown.classList.remove("visible");
-            nextStep();
-          }
-        }, 1000);
-      }
-
-      // =========================================
-      // ÉCRAN DE SORTIE
-      // =========================================
-
-      function goodbye(type) {
-        stage = "bye";
-
-        clearInterval(countdownInterval);
-        countdownInterval = null;
-
-        emoji.textContent = "";
-        question.textContent =
-          "All right, bonne soirée !";
-
-        buttons.classList.add("hidden");
-        smsLink.classList.add("hidden");
-
-        error.textContent = "";
-        error.classList.remove("feedback");
-        countdown.classList.remove("visible");
-
-        gif.src =
-          type === "busy"
-            ? "./busy.gif"
-            : "./goodbye.gif";
-
-        gif.classList.remove("hidden");
-      }
-
-      // =========================================
-      // GESTION DES RÉPONSES
-      // =========================================
-
-      function handleAnswer(answer) {
-
-        if (transitioning || stage === "bye") {
-          return;
+          border: 0;
+          border-radius: 13px;
+          padding: 13px 28px;
+
+          font-family: inherit;
+          font-size: 16px;
+          font-weight: 700;
+
+          cursor: pointer;
+          text-decoration: none;
+
+          transition:
+            transform 0.2s,
+            background 0.2s;
         }
 
-        // QUESTION 1 : BUSY
-        if (stage === "busy") {
+        button:active,
+        #smsLink:active {
+          transform: scale(0.94);
+        }
 
-          if (answer === "yes") {
-            save("busy_yes");
-            goodbye("busy");
-          } else {
-            save("busy_no");
-            showPotatoes();
+        /* Boutons par défaut */
+
+        .yes {
+          background: #b99aff;
+          color: #171022;
+        }
+
+        .no {
+          background: #484255;
+          color: white;
+        }
+
+        /* Première question :
+          TAK gris, NIE violet */
+
+        .yes.first-question {
+          background: #484255;
+          color: white;
+        }
+
+        .no.first-question {
+          background: #b99aff;
+          color: #171022;
+        }
+
+        /* Questions intermédiaires :
+          TAK et NIE gris */
+
+        .yes.neutral,
+        .no.neutral {
+          background: #484255;
+          color: white;
+        }
+
+        button:disabled {
+          cursor: default;
+          opacity: 1;
+        }
+
+        /* Réactions */
+
+        .error {
+          margin-top: 18px;
+          font-size: 20px;
+          line-height: 1.4;
+          color: #ff788c;
+          font-weight: 600;
+
+        }
+
+        .error:empty {
+          display: none;
+        }
+
+        .feedback {
+          font-weight: 600;
+        }
+
+        .feedback-positive {
+          color: #70e6a0;
+        }
+
+        .feedback-negative {
+          color: #ff788c;
+        }
+
+        /* Décompte en bas à droite */
+
+        .countdown {
+          display: none;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 6px;
+
+          margin-top: 14px;
+
+          color: #b99aff;
+          font-size: 14px;
+          font-weight: 600;
+          font-variant-numeric: tabular-nums;
+        }
+
+        .countdown.visible {
+          display: flex;
+        }
+
+        /* GIF de sortie */
+
+        .gif {
+          display: block;
+          width: 190px;
+          max-width: 100%;
+          border-radius: 14px;
+          margin: 16px auto;
+        }
+
+        .hidden {
+          display: none !important;
+        }
+
+        #smsLink {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        @keyframes appear {
+          from {
+            opacity: 0;
+            transform: translateY(15px) scale(0.97);
           }
 
-          return;
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
         }
 
+        @media (prefers-reduced-motion: reduce) {
+          .popup {
+            animation: none;
+          }
+
+          button,
+          #smsLink {
+            transition: none;
+          }
+        }
+      </style>
+    </head>
+
+    <body>
+
+      <main class="popup" id="popup">
+
+        <div class="emoji" id="emoji"></div>
+
+        <h1 id="question">
+          Heyyy, jesteś busy?
+        </h1>
+
+        <div class="buttons" id="buttons">
+
+          <button
+            type="button"
+            class="yes first-question"
+            id="yesBtn"
+          >
+            TAK
+          </button>
+
+          <a
+            id="smsLink"
+            class="yes hidden"
+            href="#"
+          >
+            TAK
+          </a>
+
+          <button
+            type="button"
+            class="no first-question"
+            id="noBtn"
+          >
+            NIE
+          </button>
+
+        </div>
+
+        <div
+          class="error"
+          id="error"
+          aria-live="polite"
+        ></div>
+
+        <div
+          class="countdown"
+          id="countdown"
+          aria-label="Prochaine question"
+        >
+          <span id="countdownNumber">3</span>
+        </div>
+
+        <img
+          class="gif hidden"
+          id="gif"
+          alt="Funny goodbye GIF"
+        />
+
+      </main>
+
+      <script>
+        // =========================================
+        // CONFIGURATION
+        // =========================================
+
+        // Remets ici ton numéro de téléphone
+        // au format international.
+        const phone = "+32472845612";
+
+        const message = "Spacer? Wyśmienity pomysł!";
+        const feedbackDuration = 3000;
+
+        // =========================================
+        // ÉLÉMENTS HTML
+        // =========================================
+
+        const question =
+          document.getElementById("question");
+
+        const emoji =
+          document.getElementById("emoji");
+
+        const buttons =
+          document.getElementById("buttons");
+
+        const error =
+          document.getElementById("error");
+
+        const gif =
+          document.getElementById("gif");
+
+        const yesBtn =
+          document.getElementById("yesBtn");
+
+        const noBtn =
+          document.getElementById("noBtn");
+
+        const smsLink =
+          document.getElementById("smsLink");
+
+        const countdown =
+          document.getElementById("countdown");
+
+        const countdownNumber =
+          document.getElementById("countdownNumber");
+
+        // Lien SMS natif
+
+        smsLink.href =
+          `sms:${phone}?&body=${encodeURIComponent(message)}`;
+
+        // =========================================
+        // ÉTAT
+        // =========================================
+
+        let stage = "busy";
+        let refusals = 0;
+        let transitioning = false;
+        let countdownInterval = null;
+        let walkTimeout = null;
+
+        // =========================================
+        // SAUVEGARDE LOCALE
+        // =========================================
+
+        function save(answer) {
+          try {
+            localStorage.setItem(
+              "friend_answer",
+              answer
+            );
+          } catch (e) {
+            // Le jeu fonctionne même si
+            // le stockage local est désactivé.
+          }
+        }
+
+        // =========================================
+        // RÉINITIALISATION D'UNE QUESTION
+        // =========================================
+
+        function setQuestion(text, nextStage) {
+          stage = nextStage;
+
+          question.textContent = text;
+          emoji.textContent = "";
+
+          error.textContent = "";
+
+          error.classList.remove(
+            "feedback",
+            "feedback-positive",
+            "feedback-negative"
+          );
+
+          clearInterval(countdownInterval);
+          countdownInterval = null;
+
+          countdown.classList.remove("visible");
+
+          yesBtn.textContent = "TAK";
+          noBtn.textContent = "NIE";
+
+          yesBtn.classList.remove(
+            "first-question",
+            "neutral",
+            "hidden"
+          );
+
+          noBtn.classList.remove(
+            "first-question",
+            "neutral",
+            "hidden"
+          );
+
+          smsLink.classList.add("hidden");
+
+          yesBtn.disabled = false;
+          noBtn.disabled = false;
+
+          transitioning = false;
+        }
+
+        // =========================================
         // QUESTION 2 : POMMES DE TERRE
-        if (stage === "potatoes") {
+        // =========================================
 
-          save(`potatoes_${answer}`);
-
-          showFeedback(
-            answer === "yes"
-              ? "🚩🚩🚩"
-              : "Polska jest z cb dumna ! 🫡",
-            showPenguins
+        function showPotatoes() {
+          setQuestion(
+            "Czy można ufać komuś, kto nie lubi ziemniaków?",
+            "potatoes"
           );
 
-          return;
+          yesBtn.classList.add("neutral");
+          noBtn.classList.add("neutral");
         }
 
+        // =========================================
         // QUESTION 3 : PINGOUINS
-        if (stage === "penguins") {
+        // =========================================
 
-          save(`penguins_${answer}`);
-
-          showFeedback(
-            answer === "yes"
-              ? "Podejrzanie dobrze poinformowany 🤨"
-              : "Nie martw się, ja też żyłam w kłamstwie 😭",
-            showWalk
+        function showPenguins() {
+          setQuestion(
+            "Czy pingwiny mają kolana?",
+            "penguins"
           );
 
-          return;
+          yesBtn.classList.add("neutral");
+          noBtn.classList.add("neutral");
         }
 
-        // QUESTION 4 : PROMENADE
-        if (stage === "walk" && answer === "no") {
+        // =========================================
+        // QUESTION 4 : ÉTOILES
+        // =========================================
 
-          refusals++;
+        function showStars() {
+          setQuestion(
+            "Czy można zobaczyć gwiazdy w ciągu dnia? ",
+            "stars"
+          );
 
-          if (refusals === 1) {
+          yesBtn.classList.add("neutral");
+          noBtn.classList.add("neutral");
+        }
 
-            error.textContent = "Hmm... 🤨";
-            error.classList.remove("feedback");
+        // =========================================
+        // QUESTION 5 : PROMENADE
+        // =========================================
 
-          } else {
+        function showWalk() {
+          setQuestion(
+            "Chętny na spacer? 👀",
+            "walk"
+          );
+
+          refusals = 0;
+
+          yesBtn.classList.add("hidden");
+          smsLink.classList.remove("hidden");
+        }
+
+        function showFinalAnswer() {
+          setQuestion(
+            "To twoje ostateczne słowo?",
+            "finalAnswer"
+          );
+
+          yesBtn.classList.add("neutral");
+          noBtn.classList.add("first-question");
+
+          yesBtn.classList.remove("hidden");
+          smsLink.classList.add("hidden");
+        }
+
+
+
+        // =========================================
+        // RÉACTION + DÉCOMPTE 3, 2, 1
+        // =========================================
+
+        function showFeedback(
+          text,
+          nextStep,
+          isCorrect
+        ) {
+          if (transitioning) return;
+
+          transitioning = true;
+
+          error.textContent = text;
+
+          error.classList.remove(
+            "feedback-positive",
+            "feedback-negative"
+          );
+
+          error.classList.add(
+            "feedback",
+            isCorrect
+              ? "feedback-positive"
+              : "feedback-negative"
+          );
+
+          yesBtn.disabled = true;
+          noBtn.disabled = true;
+
+          let seconds =
+            Math.ceil(feedbackDuration / 1000);
+
+          countdownNumber.textContent = seconds;
+          countdown.classList.add("visible");
+
+          clearInterval(countdownInterval);
+
+          countdownInterval = setInterval(() => {
+            seconds--;
+
+            if (seconds > 0) {
+              countdownNumber.textContent = seconds;
+            } else {
+              clearInterval(countdownInterval);
+              countdownInterval = null;
+
+              countdown.classList.remove("visible");
+
+              nextStep();
+            }
+          }, 1000);
+        }
+
+        // =========================================
+        // ÉCRAN DE SORTIE
+        // =========================================
+
+        function goodbye(type) {
+          stage = "bye";
+
+          clearInterval(countdownInterval);
+          countdownInterval = null;
+
+          emoji.textContent = "";
+
+          question.textContent =
+            "All right, bonne soirée !";
+
+          buttons.classList.add("hidden");
+          smsLink.classList.add("hidden");
+
+          error.textContent = "";
+
+          error.classList.remove(
+            "feedback",
+            "feedback-positive",
+            "feedback-negative"
+          );
+
+          countdown.classList.remove("visible");
+
+          gif.src =
+            type === "busy"
+              ? "./busy.gif"
+              : "./goodbye.gif";
+
+          gif.classList.remove("hidden");
+        }
+
+        // =========================================
+        // GESTION DES RÉPONSES
+        // =========================================
+
+        function handleAnswer(answer) {
+          if (transitioning || stage === "bye") {
+            return;
+          }
+
+          // =====================================
+          // QUESTION 1 : BUSY
+          // =====================================
+
+          if (stage === "busy") {
+            if (answer === "yes") {
+              save("busy_yes");
+              goodbye("busy");
+            } else {
+              save("busy_no");
+              showPotatoes();
+            }
+
+            return;
+          }
+
+          // =====================================
+          // QUESTION 2 : POMMES DE TERRE
+          // =====================================
+
+          if (stage === "potatoes") {
+            save(`potatoes_${answer}`);
+
+            showFeedback(
+              answer === "yes"
+                ? "🚩🚩🚩"
+                : "Polska jest z Ciebie dumna 🫡",
+              showPenguins,
+              answer === "no"
+            );
+
+            return;
+          }
+
+          // =====================================
+          // QUESTION 3 : PINGOUINS
+          // =====================================
+
+          if (stage === "penguins") {
+            save(`penguins_${answer}`);
+
+            showFeedback(
+              answer === "yes"
+                ? "Podejrzanie dobrze poinformowany 🤔"
+                : "Nie martw się, ja też żyłam w kłamstwie 😭😭",
+              showStars,
+              answer === "yes"
+            );
+
+            return;
+          }
+
+          // =====================================
+          // QUESTION 4 : ÉTOILES
+          // =====================================
+
+          if (stage === "stars") {
+            save(`stars_${answer}`);
+
+            showFeedback(
+              answer === "yes"
+                ? "No ba, Słońce nie żarówka 😝"
+                : "A Słońce to co, żarówka? 💀",
+              showWalk,
+              answer === "yes"
+            );
+
+            return;
+          }
+
+          // =====================================
+          // QUESTION 5 : PROMENADE
+          // =====================================
+
+
+          if (stage === "walk" && answer === "no") {
 
             save("walk_no");
-            goodbye("walk");
 
+            // On masque temporairement les boutons
+            yesBtn.classList.add("hidden");
+            noBtn.classList.add("hidden");
+            smsLink.classList.add("hidden");
+
+            // Réaction dramatique
+            error.textContent = "Hmmm... 🤨";
+
+            // Après 1,7 seconde : dernière question
+            clearTimeout(walkTimeout);
+
+            walkTimeout = setTimeout(() => {
+              showFinalAnswer();
+            }, 1700);
+
+            return;
           }
+
+          // =====================================
+          // QUESTION 6 : DERNIER MOT
+          // =====================================
+
+          if (stage === "finalAnswer") {
+
+            if (answer === "yes") {
+
+              // Oui, il confirme son refus
+              save("final_yes");
+              goodbye("walk");
+
+              } else {
+                save("final_no");
+
+                setQuestion("A jednak! 😏", "accepted");
+
+                // Aucun bouton visible
+                yesBtn.classList.add("hidden");
+                noBtn.classList.add("hidden");
+                smsLink.classList.add("hidden");
+
+                setTimeout(() => {
+                  // Tentative d'ouverture d'iMessage
+                  window.location.href = smsLink.href;
+
+                  // Bouton de secours si iOS bloque l'ouverture
+                  setTimeout(() => {
+                    smsLink.classList.remove("hidden");
+                  }, 1000);
+
+                }, 1200);
+              }
+              }
+
+            return;
+          
         }
-      }
 
-      // =========================================
-      // ÉVÉNEMENTS
-      // =========================================
+        // =========================================
+        // ÉVÉNEMENTS
+        // =========================================
 
-      yesBtn.addEventListener("click", () => {
-        handleAnswer("yes");
-      });
+        yesBtn.addEventListener("click", () => {
+          handleAnswer("yes");
+        });
 
-      noBtn.addEventListener("click", () => {
-        handleAnswer("no");
-      });
+        noBtn.addEventListener("click", () => {
+          handleAnswer("no");
+        });
 
-      smsLink.addEventListener("click", () => {
-        save("walk_yes");
-      });
+        smsLink.addEventListener("click", () => {
+          save("walk_yes");
+        });
 
-    </script>
+      </script>
 
-  </body>
-</html>
+    </body>
+  </html>
